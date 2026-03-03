@@ -701,6 +701,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2064605962}
   - component: {fileID: 2064605963}
+  - component: {fileID: 2064605964}
   m_Layer: 0
   m_Name: User
   m_TagString: Untagged
@@ -737,6 +738,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canMove: 0
+  clickedObject: {fileID: 0}
+  Highlighting: {fileID: 2064605964}
+--- !u!114 &2064605964
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2064605960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b31d65d8a647d04b9f9f8abaffb3011, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mat1: {fileID: 2100000, guid: ed790592de556264e9d13d6f691f260a, type: 2}
+  highlightMat: {fileID: 2100000, guid: 9c088de550459234386a14987b126366, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
