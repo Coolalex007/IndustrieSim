@@ -1,12 +1,12 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class IndustrialMachineDashboard : MonoBehaviour
 {
     private static IndustrialMachineDashboard instance;
-    private readonly Dictionary<string, Text> values = new Dictionary<string, Text>();
-    private Font font;
+    private readonly Dictionary<string, TMP_Text> values = new Dictionary<string, TMP_Text>();
     private float nextRefreshTime;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
@@ -113,7 +113,6 @@ public class IndustrialMachineDashboard : MonoBehaviour
 
     private void BuildDashboard()
     {
-        font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
         RectTransform rect = GetComponent<RectTransform>();
         rect.anchorMin = new Vector2(0f, 1f);
         rect.anchorMax = new Vector2(0f, 1f);
@@ -133,7 +132,7 @@ public class IndustrialMachineDashboard : MonoBehaviour
         layout.childForceExpandHeight = false;
         layout.childForceExpandWidth = true;
 
-        CreateText(transform, "FABRIK-DASHBOARD", 15, FontStyle.Bold, new Color(0.34f, 0.74f, 1f), 27f);
+        CreateText(transform, "FABRIK-DASHBOARD", 15, FontStyles.Bold, new Color(0.34f, 0.74f, 1f), 27f);
         CreateRow("Maschinen gesamt");
         CreateRow("Aktiv");
         CreateRow("Wartung");
@@ -151,23 +150,22 @@ public class IndustrialMachineDashboard : MonoBehaviour
         layout.childControlHeight = true;
         layout.childControlWidth = true;
         layout.childForceExpandWidth = true;
-        CreateText(row.transform, label, 13, FontStyle.Normal, new Color(0.68f, 0.74f, 0.82f), 22f);
-        Text value = CreateText(row.transform, "-", 13, FontStyle.Bold, Color.white, 22f);
-        value.alignment = TextAnchor.MiddleRight;
+        CreateText(row.transform, label, 13, FontStyles.Normal, new Color(0.68f, 0.74f, 0.82f), 22f);
+        TMP_Text value = CreateText(row.transform, "-", 13, FontStyles.Bold, Color.white, 22f);
+        value.alignment = TextAlignmentOptions.MidlineRight;
         values[label] = value;
     }
 
-    private Text CreateText(Transform parent, string content, int size, FontStyle style, Color color, float height)
+    private TMP_Text CreateText(Transform parent, string content, int size, FontStyles style, Color color, float height)
     {
-        GameObject textObject = new GameObject("Text", typeof(RectTransform), typeof(Text), typeof(LayoutElement));
+        GameObject textObject = new GameObject("Text", typeof(RectTransform), typeof(TextMeshProUGUI), typeof(LayoutElement));
         textObject.transform.SetParent(parent, false);
-        Text text = textObject.GetComponent<Text>();
-        text.font = font;
+        TMP_Text text = textObject.GetComponent<TMP_Text>();
         text.text = content;
         text.fontSize = size;
         text.fontStyle = style;
         text.color = color;
-        text.alignment = TextAnchor.MiddleLeft;
+        text.alignment = TextAlignmentOptions.MidlineLeft;
         text.raycastTarget = false;
         textObject.GetComponent<LayoutElement>().preferredHeight = height;
         return text;
