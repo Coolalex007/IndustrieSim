@@ -114,6 +114,10 @@ public class MachineDetailsPanel : MonoBehaviour
 
         editContent = CreateVerticalContent("MachineEditContent");
         CreateText(editContent.transform, "MASCHINENDATEN BEARBEITEN", 15, FontStyle.Bold, new Color(0.34f, 0.74f, 1f), 28f);
+        CreateEditRow(editContent.transform, "Maschine");
+        CreateEditRow(editContent.transform, "Maschinen-ID");
+        CreateEditRow(editContent.transform, "Hersteller");
+        CreateEditRow(editContent.transform, "Modell");
         CreateEditRow(editContent.transform, "Status");
         CreateEditRow(editContent.transform, "Auslastung");
         CreateEditRow(editContent.transform, "Temperatur");
@@ -162,6 +166,10 @@ public class MachineDetailsPanel : MonoBehaviour
             return;
         }
 
+        SetInput("Maschine", selectedData.machineName);
+        SetInput("Maschinen-ID", selectedData.machineId);
+        SetInput("Hersteller", selectedData.manufacturer);
+        SetInput("Modell", selectedData.model);
         SetInput("Status", selectedData.status);
         SetInput("Auslastung", FormatNumber(selectedData.utilizationPercent));
         SetInput("Temperatur", FormatNumber(selectedData.temperatureCelsius));
@@ -183,6 +191,10 @@ public class MachineDetailsPanel : MonoBehaviour
             return;
         }
 
+        selectedData.machineName = GetInput("Maschine");
+        selectedData.machineId = GetInput("Maschinen-ID");
+        selectedData.manufacturer = GetInput("Hersteller");
+        selectedData.model = GetInput("Modell");
         selectedData.status = GetInput("Status");
         selectedData.utilizationPercent = ReadFloat("Auslastung", selectedData.utilizationPercent);
         selectedData.temperatureCelsius = ReadFloat("Temperatur", selectedData.temperatureCelsius);
