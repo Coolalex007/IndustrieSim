@@ -36,12 +36,12 @@ public static class IndustrialMachineStorage
         get { return Path.Combine(Application.persistentDataPath, "industrial-machines.json"); }
     }
 
-    public static void Load(string objectName, IndustrialMachineData target)
+    public static bool Load(string objectName, IndustrialMachineData target)
     {
         IndustrialMachineRecord record = ReadStore().machines.Find(machine => machine.objectName == objectName);
         if (record == null)
         {
-            return;
+            return false;
         }
 
         target.machineName = record.machineName;
@@ -58,6 +58,7 @@ public static class IndustrialMachineStorage
         target.product = record.product;
         target.unitsPerHour = record.unitsPerHour;
         target.efficiencyPercent = record.efficiencyPercent;
+        return true;
     }
 
     public static void Save(string objectName, IndustrialMachineData source)
