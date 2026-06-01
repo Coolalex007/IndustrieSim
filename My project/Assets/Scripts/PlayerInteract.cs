@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerInteract : MonoBehaviour
 {
@@ -17,7 +18,7 @@ public class PlayerInteract : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !IsPointerOverUi())
         {
             Ray clickRay = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(clickRay, out RaycastHit hitInfo))
@@ -50,5 +51,10 @@ public class PlayerInteract : MonoBehaviour
         {
             canMove ^= true;
         }
+    }
+
+    private static bool IsPointerOverUi()
+    {
+        return EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
     }
 }
