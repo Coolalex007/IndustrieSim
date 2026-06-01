@@ -59,12 +59,16 @@ public class IndustrialMachineData : MonoBehaviour
         }
 
         ScheduleNextMaintenanceCheck();
-        if (status == RunningStatus && UnityEngine.Random.value < MaintenanceChance)
+        if (!RequiresMaintenance && UnityEngine.Random.value < MaintenanceChance)
         {
             status = MaintenanceRequiredStatus;
             Save();
             IndustrialMachineDashboard.RefreshNow();
-            MachineDetailsPanel.GetOrCreate().RefreshIfSelected(this);
+            MachineDetailsPanel panel = MachineDetailsPanel.GetOrCreate();
+            if (panel != null)
+            {
+                panel.RefreshIfSelected(this);
+            }
         }
     }
 
