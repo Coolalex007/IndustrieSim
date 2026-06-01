@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class IndustrialMachineData : MonoBehaviour
 {
+    [Header("JSON-Speicherung")]
+    [SerializeField] private string storageKey;
+
     [Header("Identifikation")]
     public string machineName;
     public string machineId;
@@ -22,11 +25,19 @@ public class IndustrialMachineData : MonoBehaviour
     public int unitsPerHour;
     public float efficiencyPercent;
 
-    private string storageKey;
+    public string StorageKey
+    {
+        get { return string.IsNullOrWhiteSpace(storageKey) ? gameObject.name : storageKey; }
+        set { storageKey = value; }
+    }
 
     public void InitializeDefaults(string objectName)
     {
-        storageKey = objectName;
+        if (string.IsNullOrWhiteSpace(storageKey))
+        {
+            storageKey = objectName;
+        }
+
         if (string.IsNullOrWhiteSpace(machineName))
         {
             bool isSecondMachine = objectName.Contains("(1)");
@@ -46,11 +57,16 @@ public class IndustrialMachineData : MonoBehaviour
             efficiencyPercent = isSecondMachine ? 73f : 91f;
         }
 
-        IndustrialMachineStorage.Load(storageKey, this);
+        LoadSavedValues();
+    }
+
+    public bool LoadSavedValues()
+    {
+        return IndustrialMachineStorage.Load(StorageKey, this);
     }
 
     public void Save()
     {
-        IndustrialMachineStorage.Save(string.IsNullOrEmpty(storageKey) ? gameObject.name : storageKey, this);
+        IndustrialMachineStorage.Save(StorageKey, this);
     }
 }
