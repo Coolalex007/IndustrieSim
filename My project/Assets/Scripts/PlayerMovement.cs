@@ -39,7 +39,7 @@ public class PlayerMovement : MonoBehaviour
             ? player.clickedObject.transform.position
             : t.position;
         float horizontalRotation = Input.GetAxis("Mouse X") * mouseSensitivityHor * CameraSpeedMultiplier;
-        float verticalRotation = Input.GetAxis("Mouse Y") * mouseSensitivityVer * CameraSpeedMultiplier;
+        float verticalRotation = -Input.GetAxis("Mouse Y") * mouseSensitivityVer * CameraSpeedMultiplier;
 
         cameraTransform.RotateAround(target, Vector3.up, horizontalRotation);
         cameraTransform.RotateAround(target, cameraTransform.right, verticalRotation);
