@@ -86,7 +86,14 @@ public static class IndustrialMachineStorage
         record.unitsPerHour = source.unitsPerHour;
         record.efficiencyPercent = source.efficiencyPercent;
 
-        File.WriteAllText(FilePath, JsonUtility.ToJson(store, true));
+        try
+        {
+            File.WriteAllText(FilePath, JsonUtility.ToJson(store, true));
+        }
+        catch (Exception exception)
+        {
+            Debug.LogError("Maschinendaten konnten nicht gespeichert werden: " + exception.Message);
+        }
     }
 
     private static IndustrialMachineStore ReadStore()
@@ -99,7 +106,17 @@ public static class IndustrialMachineStorage
         try
         {
             IndustrialMachineStore store = JsonUtility.FromJson<IndustrialMachineStore>(File.ReadAllText(FilePath));
-            return store ?? new IndustrialMachineStore();
+            if (store == null)
+            {
+                return new IndustrialMachineStore();
+            }
+
+            if (store.machines == null)
+            {
+                store.machines = new List<IndustrialMachineRecord>();
+            }
+
+            return store;
         }
         catch (Exception exception)
         {
