@@ -1,20 +1,20 @@
 using System.Collections.Generic;
 using System.Globalization;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class MachineDetailsPanel : MonoBehaviour
 {
     private static MachineDetailsPanel instance;
-    private readonly Dictionary<string, Text> values = new Dictionary<string, Text>();
-    private readonly Dictionary<string, InputField> inputs = new Dictionary<string, InputField>();
+    private readonly Dictionary<string, TMP_Text> values = new Dictionary<string, TMP_Text>();
+    private readonly Dictionary<string, TMP_InputField> inputs = new Dictionary<string, TMP_InputField>();
     private IndustrialMachineData selectedData;
     private GameObject detailsContent;
     private GameObject editContent;
-    private Text title;
-    private Text subtitle;
-    private Text status;
-    private Font font;
+    private TMP_Text title;
+    private TMP_Text subtitle;
+    private TMP_Text status;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     private static void Bootstrap()
@@ -78,7 +78,6 @@ public class MachineDetailsPanel : MonoBehaviour
 
     private void BuildPanel()
     {
-        font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
         RectTransform panelRect = GetComponent<RectTransform>();
         panelRect.anchorMin = new Vector2(1f, 0f);
         panelRect.anchorMax = new Vector2(1f, 1f);
@@ -93,11 +92,11 @@ public class MachineDetailsPanel : MonoBehaviour
         }
 
         detailsContent = CreateVerticalContent("MachineDetailsContent");
-        CreateText(detailsContent.transform, "MASCHINENDATEN", 15, FontStyle.Bold, new Color(0.34f, 0.74f, 1f), 26f);
-        title = CreateText(detailsContent.transform, "Maschine", 25, FontStyle.Bold, Color.white, 38f);
-        subtitle = CreateText(detailsContent.transform, "", 12, FontStyle.Normal, new Color(0.67f, 0.74f, 0.82f), 24f);
-        CreateText(detailsContent.transform, "STATUS", 11, FontStyle.Bold, new Color(0.52f, 0.62f, 0.72f), 20f);
-        status = CreateText(detailsContent.transform, "", 18, FontStyle.Bold, Color.white, 30f);
+        CreateText(detailsContent.transform, "MASCHINENDATEN", 15, FontStyles.Bold, new Color(0.34f, 0.74f, 1f), 26f);
+        title = CreateText(detailsContent.transform, "Maschine", 25, FontStyles.Bold, Color.white, 38f);
+        subtitle = CreateText(detailsContent.transform, "", 12, FontStyles.Normal, new Color(0.67f, 0.74f, 0.82f), 24f);
+        CreateText(detailsContent.transform, "STATUS", 11, FontStyles.Bold, new Color(0.52f, 0.62f, 0.72f), 20f);
+        status = CreateText(detailsContent.transform, "", 18, FontStyles.Bold, Color.white, 30f);
         CreateSection(detailsContent.transform, "BETRIEBSDATEN");
         CreateValueRow(detailsContent.transform, "Auslastung");
         CreateValueRow(detailsContent.transform, "Temperatur");
@@ -113,7 +112,7 @@ public class MachineDetailsPanel : MonoBehaviour
         CreateButton(detailsContent.transform, "BEARBEITEN", BeginEdit, new Color(0.12f, 0.42f, 0.68f));
 
         editContent = CreateVerticalContent("MachineEditContent");
-        CreateText(editContent.transform, "MASCHINENDATEN BEARBEITEN", 15, FontStyle.Bold, new Color(0.34f, 0.74f, 1f), 28f);
+        CreateText(editContent.transform, "MASCHINENDATEN BEARBEITEN", 15, FontStyles.Bold, new Color(0.34f, 0.74f, 1f), 28f);
         CreateEditRow(editContent.transform, "Maschine");
         CreateEditRow(editContent.transform, "Maschinen-ID");
         CreateEditRow(editContent.transform, "Hersteller");
@@ -206,6 +205,7 @@ public class MachineDetailsPanel : MonoBehaviour
         selectedData.unitsPerHour = ReadInt("Durchsatz", selectedData.unitsPerHour);
         selectedData.efficiencyPercent = ReadFloat("Effizienz", selectedData.efficiencyPercent);
         selectedData.Save();
+        IndustrialMachineDashboard.RefreshNow();
         ShowDetails();
     }
 
@@ -229,22 +229,22 @@ public class MachineDetailsPanel : MonoBehaviour
 
     private void CreateSection(Transform parent, string label)
     {
-        CreateText(parent, label, 11, FontStyle.Bold, new Color(0.34f, 0.74f, 1f), 20f);
+        CreateText(parent, label, 11, FontStyles.Bold, new Color(0.34f, 0.74f, 1f), 20f);
     }
 
     private void CreateValueRow(Transform parent, string label)
     {
         GameObject row = CreateRowObject(parent, label, 22f);
-        CreateText(row.transform, label, 13, FontStyle.Normal, new Color(0.68f, 0.74f, 0.82f), 22f);
-        Text valueText = CreateText(row.transform, "-", 13, FontStyle.Bold, Color.white, 22f);
-        valueText.alignment = TextAnchor.MiddleRight;
+        CreateText(row.transform, label, 13, FontStyles.Normal, new Color(0.68f, 0.74f, 0.82f), 22f);
+        TMP_Text valueText = CreateText(row.transform, "-", 13, FontStyles.Bold, Color.white, 22f);
+        valueText.alignment = TextAlignmentOptions.MidlineRight;
         values[label] = valueText;
     }
 
     private void CreateEditRow(Transform parent, string label)
     {
         GameObject row = CreateRowObject(parent, label, 28f);
-        CreateText(row.transform, label, 12, FontStyle.Normal, new Color(0.68f, 0.74f, 0.82f), 28f);
+        CreateText(row.transform, label, 12, FontStyles.Normal, new Color(0.68f, 0.74f, 0.82f), 28f);
         inputs[label] = CreateInputField(row.transform);
     }
 
@@ -261,20 +261,21 @@ public class MachineDetailsPanel : MonoBehaviour
         return row;
     }
 
-    private InputField CreateInputField(Transform parent)
+    private TMP_InputField CreateInputField(Transform parent)
     {
-        GameObject inputObject = new GameObject("Input", typeof(RectTransform), typeof(Image), typeof(InputField), typeof(LayoutElement));
+        GameObject inputObject = new GameObject("Input", typeof(RectTransform), typeof(Image), typeof(TMP_InputField), typeof(LayoutElement));
         inputObject.transform.SetParent(parent, false);
         Image image = inputObject.GetComponent<Image>();
         image.color = new Color(0.1f, 0.14f, 0.2f, 1f);
-        Text inputText = CreateText(inputObject.transform, "", 12, FontStyle.Normal, Color.white, 26f);
+        TMP_Text inputText = CreateText(inputObject.transform, "", 12, FontStyles.Normal, Color.white, 26f);
         RectTransform inputTextRect = inputText.GetComponent<RectTransform>();
         inputTextRect.anchorMin = Vector2.zero;
         inputTextRect.anchorMax = Vector2.one;
         inputTextRect.offsetMin = new Vector2(6f, 0f);
         inputTextRect.offsetMax = new Vector2(-6f, 0f);
-        inputText.alignment = TextAnchor.MiddleRight;
-        InputField input = inputObject.GetComponent<InputField>();
+        inputText.alignment = TextAlignmentOptions.MidlineRight;
+        TMP_InputField input = inputObject.GetComponent<TMP_InputField>();
+        input.textViewport = inputTextRect;
         input.textComponent = inputText;
         input.targetGraphic = image;
         inputObject.GetComponent<LayoutElement>().preferredHeight = 26f;
@@ -289,26 +290,25 @@ public class MachineDetailsPanel : MonoBehaviour
         buttonObject.GetComponent<LayoutElement>().preferredHeight = 32f;
         Button button = buttonObject.GetComponent<Button>();
         button.onClick.AddListener(action);
-        Text buttonText = CreateText(buttonObject.transform, label, 12, FontStyle.Bold, Color.white, 32f);
+        TMP_Text buttonText = CreateText(buttonObject.transform, label, 12, FontStyles.Bold, Color.white, 32f);
         RectTransform textRect = buttonText.GetComponent<RectTransform>();
         textRect.anchorMin = Vector2.zero;
         textRect.anchorMax = Vector2.one;
         textRect.offsetMin = Vector2.zero;
         textRect.offsetMax = Vector2.zero;
-        buttonText.alignment = TextAnchor.MiddleCenter;
+        buttonText.alignment = TextAlignmentOptions.Center;
     }
 
-    private Text CreateText(Transform parent, string text, int size, FontStyle style, Color color, float height)
+    private TMP_Text CreateText(Transform parent, string text, int size, FontStyles style, Color color, float height)
     {
-        GameObject textObject = new GameObject("Text", typeof(RectTransform), typeof(Text), typeof(LayoutElement));
+        GameObject textObject = new GameObject("Text", typeof(RectTransform), typeof(TextMeshProUGUI), typeof(LayoutElement));
         textObject.transform.SetParent(parent, false);
-        Text uiText = textObject.GetComponent<Text>();
-        uiText.font = font;
+        TMP_Text uiText = textObject.GetComponent<TMP_Text>();
         uiText.text = text;
         uiText.fontSize = size;
         uiText.fontStyle = style;
         uiText.color = color;
-        uiText.alignment = TextAnchor.MiddleLeft;
+        uiText.alignment = TextAlignmentOptions.MidlineLeft;
         uiText.raycastTarget = false;
         textObject.GetComponent<LayoutElement>().preferredHeight = height;
         return uiText;
