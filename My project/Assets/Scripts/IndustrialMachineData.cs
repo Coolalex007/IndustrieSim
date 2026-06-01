@@ -59,7 +59,7 @@ public class IndustrialMachineData : MonoBehaviour
         }
 
         ScheduleNextMaintenanceCheck();
-        if (!RequiresMaintenance && UnityEngine.Random.value < MaintenanceChance)
+        if (status == RunningStatus && UnityEngine.Random.value < MaintenanceChance)
         {
             status = MaintenanceRequiredStatus;
             Save();
