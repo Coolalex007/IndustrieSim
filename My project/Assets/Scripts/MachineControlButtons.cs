@@ -52,39 +52,66 @@ public class MachineControlButtons : MonoBehaviour
         layout.childForceExpandWidth = true;
         CreateButton(row.transform, "START", StartMachine, new Color(0.12f, 0.55f, 0.31f));
         CreateButton(row.transform, "STOP", StopMachine, new Color(0.58f, 0.18f, 0.18f));
-        CreateButton(row.transform, "WARTUNG", MaintainMachine, new Color(0.73f, 0.48f, 0.12f));
+        CreateButton(row.transform, "WARTEN", CompleteMaintenance, new Color(0.73f, 0.48f, 0.12f));
     }
 
     private void StartMachine()
     {
-        ChangeStatus("In Betrieb");
+        IndustrialMachineData machine = GetSelectedMachine();
+        if (machine == null)
+        {
+            return;
+        }
+
+        if (!machine.TryStart())
+        {
+            Debug.LogWarning("Die Maschine muss zuerst gewartet werden.");
+        }
+
+        RefreshUi();
     }
 
     private void StopMachine()
     {
-        ChangeStatus("Ausgeschaltet");
+        IndustrialMachineData machine = GetSelectedMachine();
+        if (machine == null)
+        {
+            return;
+        }
+
+        machine.Stop();
+        RefreshUi();
     }
 
-    private void MaintainMachine()
+    private void CompleteMaintenance()
     {
-        ChangeStatus("In Wartung");
+        IndustrialMachineData machine = GetSelectedMachine();
+        if (machine == null)
+        {
+            return;
+        }
+
+        machine.CompleteMaintenance();
+        RefreshUi();
     }
 
-    private void ChangeStatus(string newStatus)
+    private IndustrialMachineData GetSelectedMachine()
+    {
+        if (player == null || player.clickedObject == null)
+        {
+            return null;
+        }
+
+        return player.clickedObject.GetComponent<IndustrialMachineData>();
+    }
+
+    private void RefreshUi()
     {
         if (player == null || player.clickedObject == null)
         {
             return;
         }
 
-        IndustrialMachineData machine = player.clickedObject.GetComponent<IndustrialMachineData>();
-        if (machine == null)
-        {
-            return;
-        }
-
-        machine.status = newStatus;
-        machine.Save();
         MachineDetailsPanel.GetOrCreate().Show(player.clickedObject);
         IndustrialMachineDashboard.RefreshNow();
     }
