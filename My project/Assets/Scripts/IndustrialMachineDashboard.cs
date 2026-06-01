@@ -91,7 +91,7 @@ public class IndustrialMachineDashboard : MonoBehaviour
                 active++;
                 totalPower += machine.powerConsumptionKw;
             }
-            else if (machine.status.Contains("Wartung"))
+            else if (!string.IsNullOrEmpty(machine.status) && machine.status.Contains("Wartung"))
             {
                 maintenance++;
             }
@@ -108,7 +108,7 @@ public class IndustrialMachineDashboard : MonoBehaviour
         SetValue("Wartung", maintenance.ToString());
         SetValue("Ausgeschaltet", stopped.ToString());
         SetValue("Verbrauch aktiv", totalPower.ToString("0.0") + " kW");
-        SetValue("Effizienz Ø", machines.Length == 0 ? "-" : (totalEfficiency / machines.Length).ToString("0") + " %");
+        SetValue("Effizienz Durchschnitt", machines.Length == 0 ? "-" : (totalEfficiency / machines.Length).ToString("0") + " %");
     }
 
     private void BuildDashboard()
@@ -139,7 +139,7 @@ public class IndustrialMachineDashboard : MonoBehaviour
         CreateRow("Wartung");
         CreateRow("Ausgeschaltet");
         CreateRow("Verbrauch aktiv");
-        CreateRow("Effizienz Ø");
+        CreateRow("Effizienz Durchschnitt");
     }
 
     private void CreateRow(string label)
