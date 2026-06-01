@@ -7,6 +7,8 @@ public class PlayerMovement : MonoBehaviour
     public Transform t;
     public PlayerInteract player;
 
+    private const float CameraSpeedMultiplier = 2f;
+
     public void UpdateMove()
     {
         float horizontal = Input.GetAxis("Horizontal");
@@ -27,15 +29,17 @@ public class PlayerMovement : MonoBehaviour
 
     public void RotateCamera()
     {
-        if (player.clickedObject == null || Camera.main == null)
+        if (Camera.main == null)
         {
             return;
         }
 
         Transform cameraTransform = Camera.main.transform;
-        Vector3 target = player.clickedObject.transform.position;
-        float horizontalRotation = Input.GetAxis("Mouse X") * mouseSensitivityHor;
-        float verticalRotation = Input.GetAxis("Mouse Y") * mouseSensitivityVer;
+        Vector3 target = player.clickedObject != null
+            ? player.clickedObject.transform.position
+            : t.position;
+        float horizontalRotation = Input.GetAxis("Mouse X") * mouseSensitivityHor * CameraSpeedMultiplier;
+        float verticalRotation = Input.GetAxis("Mouse Y") * mouseSensitivityVer * CameraSpeedMultiplier;
 
         cameraTransform.RotateAround(target, Vector3.up, horizontalRotation);
         cameraTransform.RotateAround(target, cameraTransform.right, verticalRotation);
