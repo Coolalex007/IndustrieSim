@@ -7,46 +7,46 @@ public class PlayerMovement : MonoBehaviour
     public Transform t;
     public PlayerInteract player;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-
-    }
-
     public void UpdateMove()
     {
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
         float speed = 5.0f;
-        transform.position += new Vector3(horizontal,0,vertical) * speed * Time.deltaTime;
+        transform.position += new Vector3(horizontal, 0, vertical) * speed * Time.deltaTime;
     }
 
-    // Update is called once per frame
-    void Update ()
+    void Update()
     {
-        if (!player.canMove)
+        if (!player.canMove || !Input.GetMouseButton(1))
         {
             return;
         }
-        //UpdateMove();
 
-        if (!Input.GetMouseButtonDown(1))
-        {
-            RotateCamera();
-        }
-        else
-        {
-            Debug.Log("AAAA");
-        }
- 
+        RotateCamera();
     }
 
     public void RotateCamera()
     {
+        if (player.clickedObject == null || Camera.main == null)
+        {
+            return;
+        }
+
+        Transform cameraTransform = Camera.main.transform;
+        Vector3 target = player.clickedObject.transform.position;
         float horizontalRotation = Input.GetAxis("Mouse X") * mouseSensitivityHor;
-        
         float verticalRotation = Input.GetAxis("Mouse Y") * mouseSensitivityVer;
 
-        t.Rotate(verticalRotation * mouseSensitivityVer, horizontalRotation * mouseSensitivityHor, 0);
+        cameraTransform.RotateAround(target, Vector3.up, horizontalRotation);
+        cameraTransform.RotateAround(target, cameraTransform.right, verticalRotation);
+
+        Vector3 targetToCamera = cameraTransform.position - target;
+        float verticalAngle = Vector3.Angle(Vector3.up, targetToCamera);
+        if (verticalAngle < 5f || verticalAngle > 175f)
+        {
+            cameraTransform.RotateAround(target, cameraTransform.right, -verticalRotation);
+        }
+
+        cameraTransform.LookAt(target);
     }
 }
