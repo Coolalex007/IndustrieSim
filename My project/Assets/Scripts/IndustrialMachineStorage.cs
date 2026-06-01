@@ -31,9 +31,18 @@ public class IndustrialMachineStore
 
 public static class IndustrialMachineStorage
 {
+    private const string FileName = "industrial-machines.json";
+
     public static string FilePath
     {
-        get { return Path.Combine(Application.persistentDataPath, "industrial-machines.json"); }
+        get
+        {
+#if UNITY_EDITOR
+            return Path.Combine(Application.dataPath, "Data", FileName);
+#else
+            return Path.Combine(Application.persistentDataPath, FileName);
+#endif
+        }
     }
 
     public static bool Load(string objectName, IndustrialMachineData target)
@@ -89,6 +98,12 @@ public static class IndustrialMachineStorage
 
         try
         {
+            string directory = Path.GetDirectoryName(FilePath);
+            if (!string.IsNullOrEmpty(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
             File.WriteAllText(FilePath, JsonUtility.ToJson(store, true));
         }
         catch (Exception exception)
@@ -99,6 +114,7 @@ public static class IndustrialMachineStorage
 
     private static IndustrialMachineStore ReadStore()
     {
+        TryMigrateLegacyFile();
         if (!File.Exists(FilePath))
         {
             return new IndustrialMachineStore();
@@ -124,5 +140,32 @@ public static class IndustrialMachineStorage
             Debug.LogWarning("Maschinendaten konnten nicht gelesen werden: " + exception.Message);
             return new IndustrialMachineStore();
         }
+    }
+
+    private static void TryMigrateLegacyFile()
+    {
+#if UNITY_EDITOR
+        string legacyPath = Path.Combine(Application.persistentDataPath, FileName);
+        if (File.Exists(FilePath) || !File.Exists(legacyPath))
+        {
+            return;
+        }
+
+        try
+        {
+            string directory = Path.GetDirectoryName(FilePath);
+            if (!string.IsNullOrEmpty(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            File.Copy(legacyPath, FilePath);
+            Debug.Log("Maschinendaten wurden nach Assets/Data migriert.");
+        }
+        catch (Exception exception)
+        {
+            Debug.LogWarning("Bestehende Maschinendaten konnten nicht migriert werden: " + exception.Message);
+        }
+#endif
     }
 }
