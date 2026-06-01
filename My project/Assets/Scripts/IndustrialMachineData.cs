@@ -22,27 +22,35 @@ public class IndustrialMachineData : MonoBehaviour
     public int unitsPerHour;
     public float efficiencyPercent;
 
+    private string storageKey;
+
     public void InitializeDefaults(string objectName)
     {
-        if (!string.IsNullOrWhiteSpace(machineName))
+        storageKey = objectName;
+        if (string.IsNullOrWhiteSpace(machineName))
         {
-            return;
+            bool isSecondMachine = objectName.Contains("(1)");
+            machineName = isSecondMachine ? "CNC-Fraese 02" : "CNC-Fraese 01";
+            machineId = isSecondMachine ? "CNC-002" : "CNC-001";
+            manufacturer = "IndustrieSim Systems";
+            model = "MX-500";
+            status = isSecondMachine ? "Wartung faellig" : "In Betrieb";
+            utilizationPercent = isSecondMachine ? 68f : 84f;
+            temperatureCelsius = isSecondMachine ? 72.6f : 64.8f;
+            powerConsumptionKw = isSecondMachine ? 11.7f : 13.4f;
+            operatingHours = isSecondMachine ? 4290 : 3842;
+            lastMaintenance = isSecondMachine ? "12.04.2026" : "18.05.2026";
+            nextMaintenance = isSecondMachine ? "02.06.2026" : "18.07.2026";
+            product = isSecondMachine ? "Getriebegehaeuse" : "Pumpenflansch";
+            unitsPerHour = isSecondMachine ? 31 : 42;
+            efficiencyPercent = isSecondMachine ? 73f : 91f;
         }
 
-        bool isSecondMachine = objectName.Contains("(1)");
-        machineName = isSecondMachine ? "CNC-Fraese 02" : "CNC-Fraese 01";
-        machineId = isSecondMachine ? "CNC-002" : "CNC-001";
-        manufacturer = "IndustrieSim Systems";
-        model = "MX-500";
-        status = isSecondMachine ? "Wartung faellig" : "In Betrieb";
-        utilizationPercent = isSecondMachine ? 68f : 84f;
-        temperatureCelsius = isSecondMachine ? 72.6f : 64.8f;
-        powerConsumptionKw = isSecondMachine ? 11.7f : 13.4f;
-        operatingHours = isSecondMachine ? 4290 : 3842;
-        lastMaintenance = isSecondMachine ? "12.04.2026" : "18.05.2026";
-        nextMaintenance = isSecondMachine ? "02.06.2026" : "18.07.2026";
-        product = isSecondMachine ? "Getriebegehaeuse" : "Pumpenflansch";
-        unitsPerHour = isSecondMachine ? 31 : 42;
-        efficiencyPercent = isSecondMachine ? 73f : 91f;
+        IndustrialMachineStorage.Load(storageKey, this);
+    }
+
+    public void Save()
+    {
+        IndustrialMachineStorage.Save(string.IsNullOrEmpty(storageKey) ? gameObject.name : storageKey, this);
     }
 }
