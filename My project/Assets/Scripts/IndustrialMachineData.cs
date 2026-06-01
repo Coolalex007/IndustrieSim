@@ -64,6 +64,7 @@ public class IndustrialMachineData : MonoBehaviour
             status = MaintenanceRequiredStatus;
             Save();
             IndustrialMachineDashboard.RefreshNow();
+            MachineDetailsPanel.GetOrCreate().RefreshIfSelected(this);
         }
     }
 
