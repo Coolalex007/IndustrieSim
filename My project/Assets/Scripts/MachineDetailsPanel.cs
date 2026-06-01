@@ -70,6 +70,16 @@ public class MachineDetailsPanel : MonoBehaviour
         gameObject.SetActive(true);
     }
 
+    public void RefreshIfSelected(IndustrialMachineData machine)
+    {
+        if (machine == null || selectedData != machine || !gameObject.activeSelf || editContent.activeSelf)
+        {
+            return;
+        }
+
+        ShowDetails();
+    }
+
     public void Hide()
     {
         selectedData = null;
@@ -144,7 +154,7 @@ public class MachineDetailsPanel : MonoBehaviour
         title.text = selectedData.machineName;
         subtitle.text = selectedData.machineId + "  |  " + selectedData.manufacturer + " " + selectedData.model;
         status.text = selectedData.status;
-        status.color = selectedData.status == "In Betrieb" ? new Color(0.31f, 0.86f, 0.49f) : new Color(1f, 0.71f, 0.24f);
+        status.color = selectedData.status == IndustrialMachineData.RunningStatus ? new Color(0.31f, 0.86f, 0.49f) : new Color(1f, 0.71f, 0.24f);
         SetValue("Auslastung", selectedData.utilizationPercent.ToString("0") + " %");
         SetValue("Temperatur", selectedData.temperatureCelsius.ToString("0.0") + " C");
         SetValue("Leistungsaufnahme", selectedData.powerConsumptionKw.ToString("0.0") + " kW");
