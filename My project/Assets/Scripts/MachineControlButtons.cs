@@ -1,10 +1,10 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class MachineControlButtons : MonoBehaviour
 {
     private PlayerInteract player;
-    private Font font;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     private static void Bootstrap()
@@ -29,7 +29,6 @@ public class MachineControlButtons : MonoBehaviour
     private void Awake()
     {
         player = Object.FindFirstObjectByType<PlayerInteract>();
-        font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
         BuildControls();
     }
 
@@ -42,7 +41,7 @@ public class MachineControlButtons : MonoBehaviour
         column.childForceExpandHeight = false;
         column.childForceExpandWidth = true;
 
-        CreateText(transform, "STEUERUNG", 11, FontStyle.Bold, new Color(0.34f, 0.74f, 1f), 20f);
+        CreateText(transform, "STEUERUNG", 11, FontStyles.Bold, new Color(0.34f, 0.74f, 1f), 20f);
         GameObject row = new GameObject("ControlRow", typeof(RectTransform), typeof(HorizontalLayoutGroup), typeof(LayoutElement));
         row.transform.SetParent(transform, false);
         row.GetComponent<LayoutElement>().preferredHeight = 34f;
@@ -98,26 +97,25 @@ public class MachineControlButtons : MonoBehaviour
         buttonObject.GetComponent<LayoutElement>().preferredHeight = 32f;
         Button button = buttonObject.GetComponent<Button>();
         button.onClick.AddListener(action);
-        Text text = CreateText(buttonObject.transform, label, 11, FontStyle.Bold, Color.white, 32f);
+        TMP_Text text = CreateText(buttonObject.transform, label, 11, FontStyles.Bold, Color.white, 32f);
         RectTransform rect = text.GetComponent<RectTransform>();
         rect.anchorMin = Vector2.zero;
         rect.anchorMax = Vector2.one;
         rect.offsetMin = Vector2.zero;
         rect.offsetMax = Vector2.zero;
-        text.alignment = TextAnchor.MiddleCenter;
+        text.alignment = TextAlignmentOptions.Center;
     }
 
-    private Text CreateText(Transform parent, string content, int size, FontStyle style, Color color, float height)
+    private TMP_Text CreateText(Transform parent, string content, int size, FontStyles style, Color color, float height)
     {
-        GameObject textObject = new GameObject("Text", typeof(RectTransform), typeof(Text), typeof(LayoutElement));
+        GameObject textObject = new GameObject("Text", typeof(RectTransform), typeof(TextMeshProUGUI), typeof(LayoutElement));
         textObject.transform.SetParent(parent, false);
-        Text text = textObject.GetComponent<Text>();
-        text.font = font;
+        TMP_Text text = textObject.GetComponent<TMP_Text>();
         text.text = content;
         text.fontSize = size;
         text.fontStyle = style;
         text.color = color;
-        text.alignment = TextAnchor.MiddleLeft;
+        text.alignment = TextAlignmentOptions.MidlineLeft;
         text.raycastTarget = false;
         textObject.GetComponent<LayoutElement>().preferredHeight = height;
         return text;
