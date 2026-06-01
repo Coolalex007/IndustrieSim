@@ -41,7 +41,7 @@ public class IndustrialMachineData : MonoBehaviour
         operatingHours = isSecondMachine ? 4290 : 3842;
         lastMaintenance = isSecondMachine ? "12.04.2026" : "18.05.2026";
         nextMaintenance = isSecondMachine ? "02.06.2026" : "18.07.2026";
-        product = isSecondMachine ? "Getriebegehause" : "Pumpenflansch";
+        product = isSecondMachine ? "Getriebegehaeuse" : "Pumpenflansch";
         unitsPerHour = isSecondMachine ? 31 : 42;
         efficiencyPercent = isSecondMachine ? 73f : 91f;
     }
