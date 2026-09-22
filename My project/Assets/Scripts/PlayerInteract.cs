@@ -12,7 +12,7 @@ public class PlayerInteract : MonoBehaviour
 
     void Start()
     {
-        canMove = true;
+        canMove = false;
         detailsPanel = MachineDetailsPanel.GetOrCreate();
     }
 
@@ -50,6 +50,7 @@ public class PlayerInteract : MonoBehaviour
         if (Input.GetKeyDown("l"))
         {
             canMove ^= true;
+            Debug.Log("Cam");
         }
     }
 

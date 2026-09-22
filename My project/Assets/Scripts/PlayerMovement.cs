@@ -19,11 +19,14 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        if (player.canMove)
+        {
+            UpdateMove();
+        }
         if (!player.canMove || !Input.GetMouseButton(1))
         {
             return;
         }
-
         RotateCamera();
     }
 
